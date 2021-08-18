@@ -5,10 +5,13 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
+
+	"imageUploader/uploading"
 )
 
 type ImageManager struct {
-	l log.Logger
+	l     log.Logger
+	adder uploading.Service
 }
 
 func (im *ImageManager) UploadFile(rw http.ResponseWriter, r *http.Request) {
@@ -23,11 +26,12 @@ func (im *ImageManager) UploadFile(rw http.ResponseWriter, r *http.Request) {
 		fmt.Println(err)
 		return
 	}
-	name := fheader.Filename
-	size := fheader.Size
-	desc := r.Form["description"]
-	locale := r.Form["location"]
-	region := r.Form["region"]
+	image := uploading.Img{}
+	image.Name = fheader.Filename
+	image.Size = int(fheader.Size)
+	image.ShortDesc = r.Form["description"][0]
+	image.Location = r.Form["location"][0]
+	image.Region = r.Form["region"][0]
 
 	// read all of the contents of our uploaded file into a
 	// byte array
@@ -36,4 +40,13 @@ func (im *ImageManager) UploadFile(rw http.ResponseWriter, r *http.Request) {
 		fmt.Println(err)
 	}
 
+	image.Content = imgBytes
+	err = im.adder.AddImages(image)
+	if err != nil {
+		fmt.Printf("failed to add image : %+v", err)
+		return
+	}
+	rw.WriteHeader(http.StatusCreated)
+	fmt.Fprintf(rw, "Image upload successful %s\n", image.Name)
+	return
 }
