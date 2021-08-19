@@ -23,7 +23,7 @@ var (
 
 var connectionString = fmt.Sprintf("host=%s port=%d user=%s password=%s dbname=%s sslmode=disable ", hostIP, port, userName, psWrd, dbName)
 
-var schema = `CREATE TABLE Images (
+var schema = `CREATE TABLE AD_Images (
 	id text,
 	region text,
 	description text,
@@ -87,6 +87,29 @@ func getUUID(str1, str2 string) (string, error) {
 	}
 	hashed := fmt.Sprintf("%x", hash.Sum(nil))
 	return hashed, nil
+}
+
+func (strg *Storage) GetAllImages() ([]Img, error) {
+	images := []Img{}
+	rows, err := strg.db.Queryx(`SELECT * FROM AD_Images`)
+	if err != nil {
+		fmt.Println(err)
+		return nil, err
+	}
+	defer rows.Close()
+	for rows.Next() {
+		var p Img
+		err = rows.StructScan(&p)
+		if err != nil {
+			fmt.Println(err)
+		}
+		images = append(images, p)
+	}
+	err = rows.Err()
+	if err != nil {
+		fmt.Println(err)
+	}
+	return images, nil
 }
 
 func (strg *Storage) insertImg(p Img) error {

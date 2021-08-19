@@ -7,6 +7,8 @@ import (
 	"net/http"
 
 	"imageUploader/uploading"
+
+	"github.com/gorilla/mux"
 )
 
 type ImageManager struct {
@@ -49,4 +51,10 @@ func (im *ImageManager) UploadFile(rw http.ResponseWriter, r *http.Request) {
 	rw.WriteHeader(http.StatusCreated)
 	fmt.Fprintf(rw, "Image upload successful %s\n", image.Name)
 	return
+}
+
+func SetUpRoutes(man ImageManager) {
+	sm := mux.NewRouter()
+	postRouter := sm.Methods(http.MethodPost).Subrouter()
+	postRouter.HandleFunc("/upload", man.UploadFile)
 }

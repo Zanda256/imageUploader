@@ -1,19 +1,22 @@
 package uploading
 
-import "fmt"
+import (
+	"fmt"
+	"imageUploader/viewing"
+)
 
 type Service interface {
 	AddImages(...Img) error
 }
 
-// Repository provides access to beer repository.
+// Repository provides access to image repository.
 type Repository interface {
-	// AddBeer saves a given beer to the repository.
+	// AddBeer saves a given image to the repository.
 	AddImage(Img) error
-	// GetAllBeers returns all beers saved in storage.
-	//GetAllImages() []listing.Beer
+	// GetAllBeers returns all images saved in storage.
+	GetAllImages() ([]viewing.Img, error)
 	//Get Images by region and location
-	GetImagesByLoc(region, loc string)
+	GetImagesByCriteria(filters ...string) ([]viewing.Img, error)
 }
 
 type service struct {
