@@ -4,13 +4,11 @@ import "fmt"
 
 type Service interface {
 	GetAllImages() ([]Img, error)
-	//GetImagesByCriteria(filters ...string)
+	GetImagesByCriteria(...string) ([]Img, error)
 }
 
 // Repository provides access to image repository.
 type Repository interface {
-	// AddBeer saves a given image to the repository.
-	AddImage(Img) error
 	// GetAllBeers returns all images saved in storage.
 	GetAllImages() ([]Img, error)
 	//Get Images by region and location
@@ -32,4 +30,8 @@ func (s *service) GetAllImages() ([]Img, error) {
 		return nil, err
 	}
 	return imgList, nil
+}
+
+func (s *service) GetImagesByCriteria(filters ...string) ([]Img, error) {
+
 }

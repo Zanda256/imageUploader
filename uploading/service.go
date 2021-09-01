@@ -2,7 +2,6 @@ package uploading
 
 import (
 	"fmt"
-	"imageUploader/viewing"
 )
 
 type Service interface {
@@ -11,12 +10,8 @@ type Service interface {
 
 // Repository provides access to image repository.
 type Repository interface {
-	// AddBeer saves a given image to the repository.
+	// AddImage saves a given image to the repository.
 	AddImage(Img) error
-	// GetAllBeers returns all images saved in storage.
-	GetAllImages() ([]viewing.Img, error)
-	//Get Images by region and location
-	GetImagesByCriteria(filters ...string) ([]viewing.Img, error)
 }
 
 type service struct {
