@@ -7,13 +7,15 @@ import (
 	"net/http"
 
 	"imageUploader/uploading"
+	"imageUploader/viewing"
 
 	"github.com/gorilla/mux"
 )
 
 type ImageManager struct {
-	l     log.Logger
-	adder uploading.Service
+	l      log.Logger
+	adder  uploading.Service
+	viewer viewing.Service
 }
 
 func (im *ImageManager) UploadFile(rw http.ResponseWriter, r *http.Request) {
@@ -57,4 +59,7 @@ func SetUpRoutes(man ImageManager) {
 	sm := mux.NewRouter()
 	postRouter := sm.Methods(http.MethodPost).Subrouter()
 	postRouter.HandleFunc("/upload", man.UploadFile)
+
+	getRouter := sm.Methods(http.MethodGet).Subrouter()
+	getRouter.HandleFunc("/fetch", man.FetchImages)
 }

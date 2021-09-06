@@ -9,7 +9,7 @@ type Service interface {
 
 // Repository provides access to image repository.
 type Repository interface {
-	// GetAllBeers returns all images saved in storage.
+	// GetAllImages returns all images saved in storage.
 	GetAllImages() ([]Img, error)
 	//Get Images by region and location
 	GetImagesByCriteria(region, location string) ([]Img, error)
